@@ -1,0 +1,23 @@
+{
+  "sha": "ca27d74bc954b73dadab5b71ca265d87fc861a7c",
+  "files": [
+    {
+      "rfilename": "Qwen3-TTS-12Hz-1.7B-Base-Q8_0.gguf",
+      "size": 1847874400,
+      "lfs": {
+        "sha256": "ac7931aeb2e7aad1a6ed6602d353a5679c9d096b18ce8204ac730a8408d572e1",
+        "size": 1847874400,
+        "pointerSize": 135
+      }
+    },
+    {
+      "rfilename": "mmproj-Qwen3-TTS-12Hz-1.7B-Base-bf16.gguf",
+      "size": 669081472,
+      "lfs": {
+        "sha256": "b9503e95e44705739cf82c15ce909b040b96a31ad79d02cf4dc5e1484399265d",
+        "size": 669081472,
+        "pointerSize": 134
+      }
+    }
+  ]
+}

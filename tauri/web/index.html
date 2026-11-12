@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="Obelisk: a private control plane for your home lab."><title>Obelisk</title><link rel="icon" href="assets/obelisk-icon.png"><link rel="stylesheet" href="style.css"></head>
+<body>
+<header><div class="brand"><img class="brand-mark" src="assets/obelisk-icon.png" width="32" height="32" alt="Obelisk logo"><h1>Obelisk</h1><span class="edition">CONTROL PLANE / 09</span></div><div class="header-right"><span id="gateway">Connecting</span><i class="dot" id="gateway-dot"></i><button id="settings" class="text-button">Settings</button><time id="clock"></time></div></header>
+<main>
+ <section class="voice-pane" aria-label="Jarvis assistant">
+  <div class="section-label"><span>01 / AGENT</span><span id="phase">STANDBY</span></div>
+  <div class="orb-stage"><canvas id="orb" aria-label="Jarvis circular audio visualizer"></canvas><div class="orb-caption"><strong>Jarvis</strong><span id="agent-name">SYSTEM OPERATOR</span></div></div>
+  <div class="voice-caption"><span>YOUR VOICE</span><span id="mic-state">MIC CLOSED</span></div><canvas id="voice-line" aria-label="Microphone waveform"></canvas>
+  <div class="voice-actions"><button id="mic" class="primary" title="Ctrl+Shift+Space">◉ <span>Speak</span></button><button id="stop" title="Escape">■ Stop</button></div>
+  <div class="conversation-head"><span>CONVERSATION</span><div><button id="reply-prev" class="icon" aria-label="Previous reply page">←</button><span id="reply-page">01</span><button id="reply-next" class="icon" aria-label="Next reply page">→</button></div></div>
+  <div id="reply" aria-live="polite">A local voice. A connected home.</div>
+  <form id="composer"><label class="sr-only" for="message">Message Jarvis</label><textarea id="message" rows="2" maxlength="16000" placeholder="Ask Jarvis…"></textarea><button aria-label="Send message" type="submit">↗</button></form>
+  <div class="engine"><div><span class="dot"></span> <strong>LOCAL AUDIO</strong><button id="warm" class="text-button">Warm voice ↗</button></div><p id="engine-status">Preparing Qwen on this PC</p><div class="timings"><span>Recognition <b id="stt-time">—</b></span><span>First sound <b id="first-time">—</b></span></div><label class="switch"><input id="rgb" type="checkbox" checked><span></span>Extend voice to LightDesk</label></div>
+ </section>
+ <section class="lab-pane" aria-label="Interactive homelab map">
+  <div class="map-title"><div><div class="section-label">02 / HOME LAB</div><h2>A living system.</h2></div><div class="totals"><span><b id="node-count">—</b> NODES</span><span><b id="agent-count">—</b> AGENTS</span><span><b id="session-count">—</b> SESSIONS</span></div></div>
+  <div class="toolbar"><div id="layers"><button data-layer="services" aria-pressed="true">Services</button><button data-layer="agents" aria-pressed="true">Agents</button><button data-layer="storage" aria-pressed="false">Storage</button><button data-layer="activity" aria-pressed="true">Activity</button><button data-layer="checks" aria-pressed="false">Uptime</button></div><label class="search"><span>⌕</span><input id="search" placeholder="Find a node…" aria-label="Search homelab"></label></div>
+  <div class="map-stage" id="map-stage"><svg id="topology" role="group" aria-label="Live logical homelab topology"><g id="graph"></g></svg><div class="map-tools"><button id="back" hidden>← All devices</button><button id="zoom-out" aria-label="Zoom out">−</button><button id="fit">Fit</button><button id="zoom-in" aria-label="Zoom in">+</button><button id="refresh">Refresh ↻</button></div><div id="empty-map">Connecting to your home lab…</div>
+   <aside id="inspector" hidden aria-label="Selected node"><div class="inspect-head"><span id="detail-kind">NODE</span><button id="close-detail" aria-label="Close details">×</button></div><h3 id="detail-title"></h3><div id="detail-tabs"></div><div id="detail-body"></div><div id="detail-paging"></div></aside>
+  </div>
+  <div class="map-footer"><span><i class="dot"></i> <span id="map-status">Loading saved topology</span></span><span>Logical connections · drag to pan · scroll to zoom</span></div>
+ </section>
+</main>
+<footer><span id="notice" role="status">Obelisk / a private control plane</span><span id="footer-mode">Tauri · native audio · Qwen</span></footer>
+<dialog id="settings-dialog" aria-labelledby="settings-title">
+ <form id="settings-form">
+  <div class="inspect-head"><span>YOUR CONNECTIONS</span><button type="button" id="settings-close" aria-label="Close settings">×</button></div>
+  <h2 id="settings-title">Make it yours.</h2>
+  <p>Connect your own Gateway. Secrets are encrypted for your Windows account and never returned to this screen.</p>
+  <label>Gateway address<input id="setup-url" type="url" placeholder="wss://gateway.example.test" required></label>
+  <label>Agent ID<input id="setup-agent" value="jarvis" pattern="[A-Za-z0-9_-]{1,80}" required></label>
+  <label>Gateway pairing token · optional<input id="setup-token" type="password" autocomplete="off" placeholder="Leave empty to keep the saved credential"></label>
+  <label>Transcription API key · optional<input id="setup-speech" type="password" autocomplete="off" placeholder="Leave empty to keep the saved credential"></label>
+  <label>Microphone<select id="setup-mic"><option value="">System default</option></select></label>
+  <label class="setup-check"><input id="setup-voice" type="checkbox" checked>Speak replies with local Qwen</label>
+  <p id="setup-audio">Local voice is optional. Install its runtime and add your reference recordings with the tools in this repository.</p>
+  <p class="setup-disclosure">Voice input streams to OpenAI only during an explicit microphone turn. Text and agent requests use your configured Gateway.</p>
+  <button class="primary" id="setup-save">Save & connect ↗</button><span id="setup-error" role="status"></span>
+ </form>
+</dialog>
+<script src="demo.js"></script><script src="app.js"></script></body></html>

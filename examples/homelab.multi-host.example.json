@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "discoverTailscale": true,
+  "devices": [
+    {
+      "id": "workstation",
+      "name": "Workstation",
+      "local": true,
+      "providers": [
+        "codex"
+      ]
+    },
+    {
+      "id": "server",
+      "name": "Home server",
+      "ssh": "lab-server",
+      "python": "python3",
+      "ip": "192.0.2.20",
+      "dns": "server.example.test",
+      "providers": [
+        "homepage",
+        "kuma",
+        "hermes"
+      ],
+      "homepageFile": "~/homepage/config/services.yaml",
+      "kumaUrl": "http://127.0.0.1:3001",
+      "kumaSlug": "homelab",
+      "hermesHome": "~/.hermes"
+    },
+    {
+      "id": "gateway",
+      "name": "Agent host",
+      "ssh": "lab-gateway",
+      "python": "python3",
+      "ip": "192.0.2.30",
+      "providers": [
+        "openclaw",
+        "codex"
+      ]
+    }
+  ],
+  "services": [
+    {
+      "id": "homepage",
+      "name": "Homepage",
+      "device": "server",
+      "url": "https://server.example.test/",
+      "container": "homepage"
+    }
+  ],
+  "controls": {
+    "server": {
+      "ssh": "lab-server",
+      "python": "python3",
+      "sudo": false,
+      "containers": [
+        "homepage"
+      ]
+    }
+  }
+}

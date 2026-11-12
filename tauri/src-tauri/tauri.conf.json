@@ -1,0 +1,13 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Obelisk",
+  "version": "0.9.0",
+  "identifier": "local.obelisk.control",
+  "build": { "frontendDist": "../web" },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [{"title":"Obelisk","width":1440,"height":920,"minWidth":1040,"minHeight":720,"backgroundColor":"#e8e8e2"}],
+    "security": {"csp":"default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src ipc: http://ipc.localhost; object-src 'none'; frame-src 'none'"}
+  },
+  "bundle": {"active":false,"resources":{"../resources/bridge/":"bridge/"},"icon":["icons/icon.ico"]}
+}
