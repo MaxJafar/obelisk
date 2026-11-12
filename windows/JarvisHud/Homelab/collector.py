@@ -261,8 +261,9 @@ def homepage(node, config):
                         continue
                     url = clean_url(props.get('href', ''))
                     if url:
+                        owner = node if urllib.parse.urlparse(url).hostname in (config.get('ip'), config.get('dns')) else ''
                         items.append({'id': node + ':homepage:' + name, 'name': name,
-                                      'group': category, 'url': url, 'device': node,
+                                      'group': category, 'url': url, 'device': owner,
                                       'container': props.get('container'),
                                       'source': 'Homepage display metadata'})
     return items
@@ -280,7 +281,7 @@ def annotate_controls(items, node, allowed):
             pass
     for item in items:
         observed = containers.get(item.get('container'), {})
-        if observed.get('ID'):
+        if item.get('device') == node and observed.get('ID'):
             item.update(containerId=observed['ID'], containerState=observed.get('State'),
                         containerStatus=observed.get('Status'), controlHost=node,
                         controlAvailable=True, containerSampledAt=time.time())
@@ -464,6 +465,11 @@ def collect(config):
     seen = {s['id'] for s in result['services']}
     result['services'] += [dict(s) for s in config.get('services',[]) if s.get('id') not in seen and clean_url(s.get('url'))]
     result['services'] = [s for s in result['services'] if clean_url(s.get('url'))]
+    for service in result['services']:
+        if service.get('source') == 'Homepage display metadata' and not service.get('device'):
+            host = urllib.parse.urlparse(service['url']).hostname
+            owner = next((d['id'] for d in result['devices'] if host in (d.get('ip'), d.get('dns'))), '')
+            service['device'] = owner
     with futures.ThreadPoolExecutor(max_workers=6) as pool:
         result['services'] = list(pool.map(lambda s: service_health(s,result['devices']),result['services']))
     result['sessions'].sort(key=lambda s:(s['state'] not in ('Running','Open turn','Queued'),-s.get('updatedAt',0)))

@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 import tempfile
 import time
+from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
@@ -52,6 +53,21 @@ class CollectionTests(unittest.TestCase):
     def test_old_turn_is_not_reported_as_running(self):
         self.assertEqual(collector.codex_state('running', 100, now=1000), 'Unclosed turn')
         self.assertEqual(collector.codex_state('running', 950, now=1000), 'Open turn')
+
+    def test_foreign_bookmark_cannot_borrow_a_local_container_control(self):
+        items=[{'id':'foreign','device':'other','container':'homepage'}, {'id':'local','device':'server','container':'homepage'}]
+        observed=json.dumps({'Names':'homepage','ID':'a'*64,'State':'running'})
+        with patch.object(collector,'run',return_value=SimpleNamespace(stdout=observed)):
+            collector.annotate_controls(items,'server',['homepage'])
+        self.assertFalse(items[0].get('controlAvailable',False))
+        self.assertTrue(items[1]['controlAvailable'])
+
+    def test_homepage_link_keeps_its_actual_configured_host(self):
+        config={'devices':[{'id':'dashboard','local':True},{'id':'app','dns':'app.example.test'}]}
+        data={'sampledAt':time.time(),'services':[{'id':'s','device':'','source':'Homepage display metadata','url':'https://app.example.test'}]}
+        with patch.object(collector,'node_snapshot',return_value=data),patch.object(collector,'service_health',side_effect=lambda item,_:item):
+            snapshot=collector.collect(config)
+        self.assertEqual(snapshot['services'][0]['device'],'app')
 
 class ControlTests(unittest.TestCase):
     def setUp(self):
